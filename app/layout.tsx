@@ -1,5 +1,11 @@
 import { Providers } from './providers'
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({
+    subsets: ['latin'],
+    weight: '400',
+})
 
 export const metadata: Metadata = {
     title: 'Многоступенчатая школьная тестовая анкета',
@@ -10,12 +16,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang='ru'>
             <head>
-                <link
-                    href='https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700;900&display=swap'
-                    rel='stylesheet'
-                />
+                <style>{`
+                    body {
+                        font-family: ${inter.style.fontFamily};
+                    }
+                `}</style>
             </head>
-            <body className='antialiased'>
+            <body>
                 <Providers>{children}</Providers>
             </body>
         </html>

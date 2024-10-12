@@ -1,5 +1,9 @@
 import { Box, Heading } from '@chakra-ui/react'
-import HomeClient from '@/components/HomeClient'
+import dynamic from 'next/dynamic'
+
+const HomeClient = dynamic(() => import('@/components/HomeClient'), {
+    ssr: false,
+})
 
 export default function Home() {
     return (

@@ -1,15 +1,6 @@
 'use client'
 
-import {
-    Box,
-    Button,
-    Input,
-    Text,
-    Heading,
-    FormControl,
-    FormHelperText,
-    Stack,
-} from '@chakra-ui/react'
+import { Box, Button, Input, Text, Heading, FormControl, Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import useNickname from '@/hooks/useNickname'
@@ -40,7 +31,7 @@ export default function HomeClient() {
                         <Text as='span' color='teal.500' fontWeight='bold'>
                             {nickname}
                         </Text>
-                        ! Нажмите кнопку "Начать" для прохождения теста
+                        ! Нажмите кнопку &quot;Начать&quot; для прохождения теста
                     </>
                 ) : (
                     'Добро пожаловать! Придумайте свой ник'
