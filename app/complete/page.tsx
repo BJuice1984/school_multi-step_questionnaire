@@ -1,7 +1,8 @@
 import { Box, Button, Heading, Text } from '@chakra-ui/react'
 import Link from 'next/link'
+import withAuth from '@/components/withAuth'
 
-export default function CompletePage() {
+function CompletePage() {
     return (
         <Box p={8} textAlign='center'>
             <Heading mb={4}>Анкета завершена!</Heading>
@@ -14,3 +15,5 @@ export default function CompletePage() {
         </Box>
     )
 }
+
+export default withAuth(CompletePage)
