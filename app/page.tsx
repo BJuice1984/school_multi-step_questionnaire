@@ -1,8 +1,16 @@
-import { Box, Heading } from '@chakra-ui/react'
 import dynamic from 'next/dynamic'
+import { Box, Heading, Spinner } from '@chakra-ui/react'
+
+const Loading = () => (
+    <Box textAlign='center' p={8}>
+        <Spinner size='xl' />
+        <Box mt={4}>Загрузка...</Box>
+    </Box>
+)
 
 const HomeClient = dynamic(() => import('@/components/HomeClient'), {
     ssr: false,
+    loading: () => <Loading />,
 })
 
 export default function Home() {
