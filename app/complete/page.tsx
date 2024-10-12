@@ -1,7 +1,7 @@
 import { Box, Button, Heading, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 
-export default function Complete() {
+export default function CompletePage() {
     return (
         <Box p={8} textAlign='center'>
             <Heading mb={4}>Анкета завершена!</Heading>
