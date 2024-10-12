@@ -33,10 +33,18 @@ export default function HomeClient() {
 
     return (
         <Box>
-            <Heading as='h2' size='md' mb={4}>
-                {nickname && nickname.trim() !== ''
-                    ? `Добро пожаловать, ${nickname}! Нажмите кнопку "Начать" для прохождения теста`
-                    : 'Добро пожаловать! Придумайте свой ник'}
+            <Heading as='h2' size='md' mb={4} fontFamily='"Inter", sans-serif'>
+                {nickname && nickname.trim() !== '' ? (
+                    <>
+                        Добро пожаловать,{' '}
+                        <Text as='span' color='teal.500' fontWeight='bold'>
+                            {nickname}
+                        </Text>
+                        ! Нажмите кнопку "Начать" для прохождения теста
+                    </>
+                ) : (
+                    'Добро пожаловать! Придумайте свой ник'
+                )}
             </Heading>
             <Text mb={6}>
                 {nickname && nickname.trim() !== ''
@@ -62,7 +70,6 @@ export default function HomeClient() {
                                 Ok
                             </Button>
                         </Stack>
-                        <FormHelperText>Введите свой никнейм</FormHelperText>
                     </FormControl>
                 </form>
             )}
