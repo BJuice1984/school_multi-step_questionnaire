@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
+import Cookies from 'js-cookie'
 
 export default function HomeClient() {
     const [nickname, setNickname] = useState<string | null>(
@@ -38,12 +39,14 @@ export default function HomeClient() {
 
         if (newNickname && newNickname.trim() !== '') {
             setNickname(newNickname)
+            Cookies.set('nickname', newNickname)
             sessionStorage.setItem('nickname', newNickname)
         }
     }
 
     const onExit = () => {
         setNickname(null)
+        Cookies.remove('nickname')
         sessionStorage.removeItem('nickname')
     }
 

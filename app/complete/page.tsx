@@ -1,6 +1,5 @@
 import { Box, Button, Heading, Text } from '@chakra-ui/react'
 import Link from 'next/link'
-import withAuth from '@/components/withAuth'
 
 function CompletePage() {
     return (
@@ -16,4 +15,4 @@ function CompletePage() {
     )
 }
 
-export default withAuth(CompletePage)
+export default CompletePage
