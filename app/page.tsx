@@ -1,9 +1,20 @@
-import { Link } from '@chakra-ui/next-js'
+import { Box, Button, Heading, Text } from '@chakra-ui/react'
+import Link from 'next/link'
 
-export default function Page() {
+export default function Home() {
     return (
-        <Link href='/about' color='blue.400' _hover={{ color: 'blue.500' }}>
-            About
-        </Link>
+        <Box p={8}>
+            <Heading mb={4}>Добро пожаловать! Нажмите "Начать" для прохождения теста</Heading>
+            <Text mb={6}>
+                Внимание! После начала теста у Вас будет ограниченное время для его прохождения!
+                Желаем удачи!
+            </Text>
+            <Link href='/test'>
+                <Button colorScheme='teal'>Начать</Button>
+            </Link>
+            <Link href='/complete'>
+                <Button colorScheme='teal'>Завершить анкету</Button>
+            </Link>
+        </Box>
     )
 }
