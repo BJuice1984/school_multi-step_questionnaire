@@ -10,19 +10,40 @@ import { useRouter } from 'next/navigation'
 const TestForm = () => {
     const { register, handleSubmit, reset } = useForm()
     const [questions, setQuestions] = useState<any[]>([])
-    const { currentStep, setStep, setAnswer } = useTestStore()
+    const { currentStep, setStep, setAnswer, answers } = useTestStore()
     const router = useRouter()
 
     useEffect(() => {
-        fetchMockQuestions().then((data: any) => setQuestions(data))
+        fetchMockQuestions().then((data: any) => {
+            setQuestions(data)
+
+            const savedStep = sessionStorage.getItem('currentStep')
+            const savedAnswers = sessionStorage.getItem('answers')
+
+            if (savedStep) {
+                setStep(parseInt(savedStep, 10))
+            }
+
+            if (savedAnswers) {
+                const parsedAnswers = JSON.parse(savedAnswers)
+                for (const step in parsedAnswers) {
+                    setAnswer(parseInt(step, 10), parsedAnswers[step])
+                }
+            }
+        })
     }, [])
 
     const onNextStep = (data: any) => {
         setAnswer(currentStep, data)
-        setStep(currentStep + 1)
+
+        const newStep = currentStep + 1
+        sessionStorage.setItem('currentStep', newStep.toString())
+        sessionStorage.setItem('answers', JSON.stringify({ ...answers, [currentStep]: data }))
+
+        setStep(newStep)
         reset()
 
-        if (currentStep === questions.length - 1) {
+        if (newStep === questions.length) {
             router.push('/complete')
         }
     }
@@ -32,7 +53,6 @@ const TestForm = () => {
     }
 
     const currentQuestion = questions[currentStep]
-    console.log('🚀 ~ TestForm ~ currentQuestion:', currentQuestion)
 
     return (
         <Box maxW='600px' mx='auto' p='4' borderWidth='1px' borderRadius='lg' boxShadow='md'>
@@ -65,7 +85,7 @@ const TestForm = () => {
                     )}
 
                     <Button mt='6' colorScheme='teal' type='submit'>
-                        {currentStep === questions.length - 1 ? 'Отправить на проверку' : 'Далее'}
+                        {currentStep === questions.length ? 'Отправить на проверку' : 'Далее'}
                     </Button>
                 </form>
             )}
