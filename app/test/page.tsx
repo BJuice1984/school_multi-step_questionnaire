@@ -1,13 +1,7 @@
 import dynamic from 'next/dynamic'
-import { Box, Button, Heading, Text, Spinner } from '@chakra-ui/react'
+import { Box, Button, Heading, Text } from '@chakra-ui/react'
 import Link from 'next/link'
-
-const Loading = () => (
-    <Box textAlign='center' p={8}>
-        <Spinner size='xl' />
-        <Box mt={4}>Загрузка...</Box>
-    </Box>
-)
+import Loading from '@/components/Loading'
 
 const TestForm = dynamic(() => import('@/components/TestForm'), {
     ssr: false,
