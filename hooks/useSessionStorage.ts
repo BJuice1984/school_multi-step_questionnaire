@@ -28,6 +28,7 @@ export const useSessionStorage = () => {
     const clearSessionStorage = () => {
         sessionStorage.removeItem('currentStep')
         sessionStorage.removeItem('answers')
+        sessionStorage.removeItem('timerStartTime')
     }
 
     return {

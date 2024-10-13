@@ -2,7 +2,18 @@
 
 import { useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
-import { Box, Button, Heading, Radio, RadioGroup, Stack, Checkbox, Text } from '@chakra-ui/react'
+import {
+    Box,
+    Button,
+    Heading,
+    Radio,
+    RadioGroup,
+    Stack,
+    Checkbox,
+    Text,
+    Input,
+    Textarea,
+} from '@chakra-ui/react'
 import { fetchMockQuestions } from '@/mock/mockData'
 import { Question, useTestStore } from '@/store/useTestStore'
 import { useSessionStorage } from '@/hooks/useSessionStorage'
@@ -33,6 +44,7 @@ const TestForm = () => {
             router.push('/complete')
         }
     }
+
     if (!questions.length) {
         return <Box>Загрузка вопросов...</Box>
     }
@@ -52,11 +64,9 @@ const TestForm = () => {
                     borderRadius='lg'
                     boxShadow='md'
                 >
-                    {
-                        <Text mb={2} textAlign='center'>
-                            Шаг {currentStep + 1} из {totalSteps}
-                        </Text>
-                    }
+                    <Text mb={2} textAlign='center'>
+                        Шаг {currentStep + 1} из {totalSteps}
+                    </Text>
 
                     <form onSubmit={handleSubmit(onNextStep)}>
                         <Heading mb='4' size='lg'>
@@ -83,6 +93,23 @@ const TestForm = () => {
                                     </Checkbox>
                                 ))}
                             </Stack>
+                        )}
+
+                        {currentQuestion.type === 'short' && (
+                            <Input
+                                placeholder='Введите короткий ответ'
+                                {...register('answer', { required: true })}
+                                mt='4'
+                            />
+                        )}
+
+                        {currentQuestion.type === 'long' && (
+                            <Textarea
+                                placeholder='Введите подробный ответ'
+                                {...register('answer', { required: true })}
+                                mt='4'
+                                rows={6}
+                            />
                         )}
 
                         <Button mt='6' colorScheme='teal' type='submit'>

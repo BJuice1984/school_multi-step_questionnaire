@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Box, Button, Stack, Text } from '@chakra-ui/react'
+import { Box, Button, HStack, Text } from '@chakra-ui/react'
 
 interface TimerProps {
     duration: number
-    speedMultiplier?: number
     onComplete: () => void
 }
 
@@ -16,8 +15,22 @@ const Timer = ({ duration, onComplete }: TimerProps) => {
     const router = useRouter()
 
     useEffect(() => {
+        const savedStartTime = sessionStorage.getItem('timerStartTime')
+        const now = Date.now()
+
+        if (savedStartTime) {
+            const elapsedTime = Math.floor((now - parseInt(savedStartTime)) / 1000)
+            const newTimeLeft = duration - elapsedTime
+            setTimeLeft(newTimeLeft > 0 ? newTimeLeft : 0)
+        } else {
+            sessionStorage.setItem('timerStartTime', now.toString())
+        }
+    }, [duration])
+
+    useEffect(() => {
         if (timeLeft <= 0) {
             onComplete()
+            sessionStorage.removeItem('timerStartTime')
             router.push('/complete')
         }
     }, [timeLeft, onComplete, router])
@@ -33,7 +46,7 @@ const Timer = ({ duration, onComplete }: TimerProps) => {
     return (
         <Box>
             {timeLeft >= 0 ? (
-                <Box>
+                <HStack spacing='24px' p={4} justifyContent='center'>
                     <Text>Оставшееся время: {timeLeft} секунд</Text>
                     <Button
                         colorScheme='teal'
@@ -42,7 +55,7 @@ const Timer = ({ duration, onComplete }: TimerProps) => {
                     >
                         Ускорить!
                     </Button>
-                </Box>
+                </HStack>
             ) : (
                 <Text>Время вышло...</Text>
             )}
