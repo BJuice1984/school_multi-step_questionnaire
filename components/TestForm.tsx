@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
-import { Box, Button, Heading, Radio, RadioGroup, Stack, Checkbox } from '@chakra-ui/react'
+import { Box, Button, Heading, Radio, RadioGroup, Stack, Checkbox, Text } from '@chakra-ui/react'
 import { fetchMockQuestions } from '@/mock/mockData'
 import { Question, useTestStore } from '@/store/useTestStore'
 import { useSessionStorage } from '@/hooks/useSessionStorage'
@@ -37,9 +37,14 @@ const TestForm = () => {
     }
 
     const currentQuestion = questions[currentStep]
+    const totalSteps = questions.length
 
     return (
         <Box maxW='600px' mx='auto' p='4' borderWidth='1px' borderRadius='lg' boxShadow='md'>
+            <Text mb={2} textAlign='center'>
+                Шаг {currentStep + 1} из {totalSteps}
+            </Text>
+
             {currentQuestion && (
                 <form onSubmit={handleSubmit(onNextStep)}>
                     <Heading mb='4' size='lg'>
