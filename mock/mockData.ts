@@ -1,4 +1,6 @@
-export const fetchMockQuestions = () =>
+import { Question } from '@/store/useTestStore'
+
+export const fetchMockQuestions = (): Promise<Question[]> =>
     new Promise(resolve => {
         setTimeout(() => {
             resolve([

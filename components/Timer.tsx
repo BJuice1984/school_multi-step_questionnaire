@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Box, Button, HStack, Text } from '@chakra-ui/react'
 
 interface TimerProps {
@@ -12,7 +11,6 @@ interface TimerProps {
 const Timer = ({ duration, onComplete }: TimerProps) => {
     const [timeLeft, setTimeLeft] = useState(duration)
     const [speedMultiplier, setSpeedMultiplier] = useState(1)
-    const router = useRouter()
 
     useEffect(() => {
         const savedStartTime = sessionStorage.getItem('timerStartTime')
@@ -31,9 +29,8 @@ const Timer = ({ duration, onComplete }: TimerProps) => {
         if (timeLeft <= 0) {
             onComplete()
             sessionStorage.removeItem('timerStartTime')
-            router.push('/complete')
         }
-    }, [timeLeft, onComplete, router])
+    }, [timeLeft, onComplete])
 
     useEffect(() => {
         const interval = setInterval(() => {

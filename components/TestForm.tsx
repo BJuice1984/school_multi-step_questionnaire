@@ -1,6 +1,6 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import {
     Box,
@@ -20,22 +20,28 @@ import { useSessionStorage } from '@/hooks/useSessionStorage'
 import { useRouter } from 'next/navigation'
 import Timer from './Timer'
 
+interface FormData {
+    answer: string | string[]
+}
+
 const TestForm = () => {
-    const { register, handleSubmit, reset } = useForm()
+    const { register, handleSubmit, reset } = useForm<FormData>()
     const [questions, setQuestions] = useState<Question[]>([])
     const { currentStep, setStep, setAnswer, answers } = useTestStore()
     const { updateSessionStorage } = useSessionStorage()
     const router = useRouter()
 
     useEffect(() => {
-        fetchMockQuestions().then((data: any) => setQuestions(data))
+        fetchMockQuestions().then((data: Question[]) => setQuestions(data))
     }, [])
 
-    const onNextStep = (data: any) => {
-        setAnswer(currentStep, data)
+    const onNextStep: SubmitHandler<FormData> = data => {
+        const answer = Array.isArray(data.answer) ? data.answer : [data.answer]
+
+        setAnswer(currentStep, answer)
 
         const newStep = currentStep + 1
-        updateSessionStorage(newStep, { ...answers, [currentStep]: data })
+        updateSessionStorage(newStep, { ...answers, [currentStep]: answer })
 
         setStep(newStep)
         reset()
