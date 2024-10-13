@@ -8,8 +8,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-    title: 'Многоступенчатая школьная тестовая анкета',
-    description: 'Тестовая анкета для школьников для проверки и подготовке к ЕГЭ',
+    title: 'Информационная система для проверки знаний учащихся школы',
+    description: 'Многоступенчатая тестовая анкета для школьников для проверки и подготовке к ЕГЭ',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
