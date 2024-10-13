@@ -60,7 +60,7 @@ const TestForm = () => {
 
     return (
         <>
-            <Timer duration={300} onComplete={() => console.log('Время вышло')} />
+            <Timer duration={300} onComplete={() => router.push('/complete')} />
             {currentQuestion ? (
                 <Box
                     maxW='600px'
