@@ -4,10 +4,12 @@ import { Box, Button, Input, Text, Heading, FormControl, Stack } from '@chakra-u
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import useNickname from '@/hooks/useNickname'
+import { useSessionStorage } from '@/hooks/useSessionStorage'
 
 export default function HomeClient() {
     const { nickname, setNickname, clearNickname, nicknameInputRef } = useNickname()
     const router = useRouter()
+    const { clearSessionStorage } = useSessionStorage()
 
     const {
         handleSubmit,
@@ -20,6 +22,11 @@ export default function HomeClient() {
         if (newNickname && newNickname.trim() !== '') {
             setNickname(newNickname)
         }
+    }
+
+    const onExit = () => {
+        clearSessionStorage()
+        clearNickname()
     }
 
     return (
@@ -76,7 +83,9 @@ export default function HomeClient() {
 
                 <Button
                     colorScheme='teal'
-                    onClick={() => clearNickname()}
+                    onClick={() => {
+                        onExit()
+                    }}
                     mb={4}
                     isDisabled={!nickname || nickname.trim() === ''}
                 >

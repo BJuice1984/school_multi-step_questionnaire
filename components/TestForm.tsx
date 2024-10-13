@@ -4,41 +4,26 @@ import { useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 import { Box, Button, Heading, Radio, RadioGroup, Stack, Checkbox } from '@chakra-ui/react'
 import { fetchMockQuestions } from '@/mock/mockData'
-import { useTestStore } from '@/store/useTestStore'
+import { Question, useTestStore } from '@/store/useTestStore'
+import { useSessionStorage } from '@/hooks/useSessionStorage'
 import { useRouter } from 'next/navigation'
 
 const TestForm = () => {
     const { register, handleSubmit, reset } = useForm()
-    const [questions, setQuestions] = useState<any[]>([])
+    const [questions, setQuestions] = useState<Question[]>([])
     const { currentStep, setStep, setAnswer, answers } = useTestStore()
+    const { updateSessionStorage } = useSessionStorage()
     const router = useRouter()
 
     useEffect(() => {
-        fetchMockQuestions().then((data: any) => {
-            setQuestions(data)
-
-            const savedStep = sessionStorage.getItem('currentStep')
-            const savedAnswers = sessionStorage.getItem('answers')
-
-            if (savedStep) {
-                setStep(parseInt(savedStep, 10))
-            }
-
-            if (savedAnswers) {
-                const parsedAnswers = JSON.parse(savedAnswers)
-                for (const step in parsedAnswers) {
-                    setAnswer(parseInt(step, 10), parsedAnswers[step])
-                }
-            }
-        })
+        fetchMockQuestions().then((data: any) => setQuestions(data))
     }, [])
 
     const onNextStep = (data: any) => {
         setAnswer(currentStep, data)
 
         const newStep = currentStep + 1
-        sessionStorage.setItem('currentStep', newStep.toString())
-        sessionStorage.setItem('answers', JSON.stringify({ ...answers, [currentStep]: data }))
+        updateSessionStorage(newStep, { ...answers, [currentStep]: data })
 
         setStep(newStep)
         reset()
@@ -47,7 +32,6 @@ const TestForm = () => {
             router.push('/complete')
         }
     }
-
     if (!questions.length) {
         return <Box>Загрузка вопросов...</Box>
     }
@@ -65,7 +49,7 @@ const TestForm = () => {
                     {currentQuestion.type === 'single' && (
                         <RadioGroup>
                             <Stack spacing={3}>
-                                {currentQuestion.options.map((option: string) => (
+                                {currentQuestion.options?.map((option: string) => (
                                     <Radio key={option} value={option} {...register('answer')}>
                                         {option}
                                     </Radio>
@@ -76,7 +60,7 @@ const TestForm = () => {
 
                     {currentQuestion.type === 'multiple' && (
                         <Stack spacing={3}>
-                            {currentQuestion.options.map((option: string) => (
+                            {currentQuestion.options?.map((option: string) => (
                                 <Checkbox key={option} value={option} {...register('answer')}>
                                     {option}
                                 </Checkbox>
@@ -85,7 +69,7 @@ const TestForm = () => {
                     )}
 
                     <Button mt='6' colorScheme='teal' type='submit'>
-                        {currentStep === questions.length ? 'Отправить на проверку' : 'Далее'}
+                        {currentStep + 1 === questions.length ? 'Отправить на проверку' : 'Далее'}
                     </Button>
                 </form>
             )}

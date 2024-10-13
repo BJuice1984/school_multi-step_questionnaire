@@ -1,10 +1,10 @@
 import { create } from 'zustand'
 
-interface Answer {
+export interface Answer {
     [key: number]: string | string[]
 }
 
-interface Question {
+export interface Question {
     id: number
     type: 'single' | 'multiple' | 'short' | 'long'
     question: string
