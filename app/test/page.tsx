@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic'
-import { Box, Button, Heading, Text } from '@chakra-ui/react'
-import Link from 'next/link'
+import { Box, Heading, Text } from '@chakra-ui/react'
 import Loading from '@/components/Loading'
 
 const TestForm = dynamic(() => import('@/components/TestForm'), {
@@ -20,10 +19,6 @@ export default function TestPage() {
             </Text>
 
             <TestForm />
-
-            <Link href='/complete'>
-                <Button colorScheme='teal'>Далее</Button>
-            </Link>
         </Box>
     )
 }

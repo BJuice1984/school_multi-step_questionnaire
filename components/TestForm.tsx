@@ -7,6 +7,7 @@ import { fetchMockQuestions } from '@/mock/mockData'
 import { Question, useTestStore } from '@/store/useTestStore'
 import { useSessionStorage } from '@/hooks/useSessionStorage'
 import { useRouter } from 'next/navigation'
+import Timer from './Timer'
 
 const TestForm = () => {
     const { register, handleSubmit, reset } = useForm()
@@ -40,45 +41,61 @@ const TestForm = () => {
     const totalSteps = questions.length
 
     return (
-        <Box maxW='600px' mx='auto' p='4' borderWidth='1px' borderRadius='lg' boxShadow='md'>
-            <Text mb={2} textAlign='center'>
-                Шаг {currentStep + 1} из {totalSteps}
-            </Text>
+        <>
+            <Timer duration={300} onComplete={() => console.log('Время вышло')} />
+            {currentQuestion ? (
+                <Box
+                    maxW='600px'
+                    mx='auto'
+                    p='4'
+                    borderWidth='1px'
+                    borderRadius='lg'
+                    boxShadow='md'
+                >
+                    {
+                        <Text mb={2} textAlign='center'>
+                            Шаг {currentStep + 1} из {totalSteps}
+                        </Text>
+                    }
 
-            {currentQuestion && (
-                <form onSubmit={handleSubmit(onNextStep)}>
-                    <Heading mb='4' size='lg'>
-                        {currentQuestion.question}
-                    </Heading>
+                    <form onSubmit={handleSubmit(onNextStep)}>
+                        <Heading mb='4' size='lg'>
+                            {currentQuestion.question}
+                        </Heading>
 
-                    {currentQuestion.type === 'single' && (
-                        <RadioGroup>
+                        {currentQuestion.type === 'single' && (
+                            <RadioGroup>
+                                <Stack spacing={3}>
+                                    {currentQuestion.options?.map((option: string) => (
+                                        <Radio key={option} value={option} {...register('answer')}>
+                                            {option}
+                                        </Radio>
+                                    ))}
+                                </Stack>
+                            </RadioGroup>
+                        )}
+
+                        {currentQuestion.type === 'multiple' && (
                             <Stack spacing={3}>
                                 {currentQuestion.options?.map((option: string) => (
-                                    <Radio key={option} value={option} {...register('answer')}>
+                                    <Checkbox key={option} value={option} {...register('answer')}>
                                         {option}
-                                    </Radio>
+                                    </Checkbox>
                                 ))}
                             </Stack>
-                        </RadioGroup>
-                    )}
+                        )}
 
-                    {currentQuestion.type === 'multiple' && (
-                        <Stack spacing={3}>
-                            {currentQuestion.options?.map((option: string) => (
-                                <Checkbox key={option} value={option} {...register('answer')}>
-                                    {option}
-                                </Checkbox>
-                            ))}
-                        </Stack>
-                    )}
-
-                    <Button mt='6' colorScheme='teal' type='submit'>
-                        {currentStep + 1 === questions.length ? 'Отправить на проверку' : 'Далее'}
-                    </Button>
-                </form>
+                        <Button mt='6' colorScheme='teal' type='submit'>
+                            {currentStep + 1 === questions.length
+                                ? 'Отправить на проверку'
+                                : 'Далее'}
+                        </Button>
+                    </form>
+                </Box>
+            ) : (
+                <Box>Ожидайте...</Box>
             )}
-        </Box>
+        </>
     )
 }
 
