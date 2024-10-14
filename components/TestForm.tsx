@@ -25,10 +25,17 @@ interface FormData {
 }
 
 const TestForm = () => {
-    const { register, handleSubmit, reset } = useForm<FormData>()
-    const [questions, setQuestions] = useState<Question[]>([])
-    const { currentStep, setStep, setAnswer, answers } = useTestStore()
-    const { updateSessionStorage } = useSessionStorage()
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { isValid },
+    } = useForm<FormData>({
+        mode: 'onChange',
+    })
+    const { currentStep, setStep, resetStep, setAnswer, answers, questions, setQuestions } =
+        useTestStore()
+    const { updateSessionStorage, clearSessionStorage } = useSessionStorage()
     const router = useRouter()
 
     useEffect(() => {
@@ -47,6 +54,8 @@ const TestForm = () => {
         reset()
 
         if (newStep === questions.length) {
+            clearSessionStorage()
+            resetStep()
             router.push('/complete')
         }
     }
@@ -56,11 +65,21 @@ const TestForm = () => {
     }
 
     const currentQuestion = questions[currentStep]
+    console.log('🚀 ~ TestForm ~ currentStep:', currentStep)
+    console.log('🚀 ~ TestForm ~ questions:', questions)
+    console.log('🚀 ~ TestForm ~ currentQuestion:', currentQuestion)
     const totalSteps = questions.length
 
     return (
         <>
-            <Timer duration={300} onComplete={() => router.push('/complete')} />
+            <Timer
+                duration={200}
+                onComplete={() => {
+                    resetStep()
+                    clearSessionStorage()
+                    router.push('/complete')
+                }}
+            />
             {currentQuestion ? (
                 <Box
                     maxW='600px'
@@ -83,7 +102,11 @@ const TestForm = () => {
                             <RadioGroup>
                                 <Stack spacing={3}>
                                     {currentQuestion.options?.map((option: string) => (
-                                        <Radio key={option} value={option} {...register('answer')}>
+                                        <Radio
+                                            key={option}
+                                            value={option}
+                                            {...register('answer', { required: true })}
+                                        >
                                             {option}
                                         </Radio>
                                     ))}
@@ -94,7 +117,11 @@ const TestForm = () => {
                         {currentQuestion.type === 'multiple' && (
                             <Stack spacing={3}>
                                 {currentQuestion.options?.map((option: string) => (
-                                    <Checkbox key={option} value={option} {...register('answer')}>
+                                    <Checkbox
+                                        key={option}
+                                        value={option}
+                                        {...register('answer', { required: true })}
+                                    >
                                         {option}
                                     </Checkbox>
                                 ))}
@@ -106,6 +133,7 @@ const TestForm = () => {
                                 placeholder='Введите короткий ответ'
                                 {...register('answer', { required: true })}
                                 mt='4'
+                                autoFocus
                             />
                         )}
 
@@ -115,10 +143,11 @@ const TestForm = () => {
                                 {...register('answer', { required: true })}
                                 mt='4'
                                 rows={6}
+                                autoFocus
                             />
                         )}
 
-                        <Button mt='6' colorScheme='teal' type='submit'>
+                        <Button mt='6' colorScheme='teal' type='submit' isDisabled={!isValid}>
                             {currentStep + 1 === questions.length
                                 ? 'Отправить на проверку'
                                 : 'Далее'}

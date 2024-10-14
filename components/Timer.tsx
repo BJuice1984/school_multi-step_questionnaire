@@ -30,7 +30,7 @@ const Timer = ({ duration, onComplete }: TimerProps) => {
             onComplete()
             sessionStorage.removeItem('timerStartTime')
         }
-    }, [timeLeft, onComplete])
+    }, [timeLeft])
 
     useEffect(() => {
         const interval = setInterval(() => {

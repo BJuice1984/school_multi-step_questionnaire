@@ -14,6 +14,7 @@ export interface Question {
 interface TestStore {
     currentStep: number
     setStep: (step: number) => void
+    resetStep: () => void
     answers: Answer
     setAnswer: (step: number, answer: string | string[]) => void
     questions: Question[]
@@ -25,6 +26,7 @@ export const useTestStore = create<TestStore>(set => ({
     answers: {},
     questions: [],
     setStep: step => set({ currentStep: step }),
+    resetStep: () => set({ currentStep: 0 }),
     setAnswer: (step, answer) =>
         set(state => ({
             answers: { ...state.answers, [step]: answer },
