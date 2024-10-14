@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Box, Button, HStack, Text } from '@chakra-ui/react'
+import { useSessionStorage } from '@/hooks/useSessionStorage'
 
 interface TimerProps {
     duration: number
@@ -11,6 +12,19 @@ interface TimerProps {
 const Timer = ({ duration, onComplete }: TimerProps) => {
     const [timeLeft, setTimeLeft] = useState(duration)
     const [speedMultiplier, setSpeedMultiplier] = useState(1)
+    const { updateTimerStartTime, clearTimerStartTime } = useSessionStorage()
+
+    const formatTime = (totalSeconds: number) => {
+        const hours = Math.floor(totalSeconds / 3600)
+        const minutes = Math.floor((totalSeconds % 3600) / 60)
+        const seconds = totalSeconds % 60
+
+        const formattedHours = String(hours).padStart(2, '0')
+        const formattedMinutes = String(minutes).padStart(2, '0')
+        const formattedSeconds = String(seconds).padStart(2, '0')
+
+        return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`
+    }
 
     useEffect(() => {
         const savedStartTime = sessionStorage.getItem('timerStartTime')
@@ -21,14 +35,14 @@ const Timer = ({ duration, onComplete }: TimerProps) => {
             const newTimeLeft = duration - elapsedTime
             setTimeLeft(newTimeLeft > 0 ? newTimeLeft : 0)
         } else {
-            sessionStorage.setItem('timerStartTime', now.toString())
+            updateTimerStartTime(now)
         }
     }, [duration])
 
     useEffect(() => {
         if (timeLeft <= 0) {
             onComplete()
-            sessionStorage.removeItem('timerStartTime')
+            clearTimerStartTime()
         }
     }, [timeLeft])
 
@@ -44,7 +58,9 @@ const Timer = ({ duration, onComplete }: TimerProps) => {
         <Box>
             {timeLeft >= 0 ? (
                 <HStack spacing='24px' p={4} justifyContent='center'>
-                    <Text>Оставшееся время: {timeLeft} секунд</Text>
+                    <Text color={timeLeft < 15 ? 'red.500' : 'black'}>
+                        Оставшееся время: {formatTime(timeLeft)}
+                    </Text>
                     <Button
                         colorScheme='teal'
                         variant='solid'
@@ -54,7 +70,9 @@ const Timer = ({ duration, onComplete }: TimerProps) => {
                     </Button>
                 </HStack>
             ) : (
-                <Text>Время вышло...</Text>
+                <Text fontSize='lg' color='tomato'>
+                    Время вышло...
+                </Text>
             )}
         </Box>
     )

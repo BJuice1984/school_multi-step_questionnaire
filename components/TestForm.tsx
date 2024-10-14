@@ -33,6 +33,7 @@ const TestForm = () => {
     } = useForm<FormData>({
         mode: 'onChange',
     })
+    const [isTimerExpired, setIsTimerExpired] = useState(false)
     const { currentStep, setStep, resetStep, setAnswer, answers, questions, setQuestions } =
         useTestStore()
     const { updateSessionStorage, clearSessionStorage } = useSessionStorage()
@@ -56,6 +57,7 @@ const TestForm = () => {
         if (newStep === questions.length) {
             clearSessionStorage()
             resetStep()
+            setIsTimerExpired(true)
             router.push('/complete')
         }
     }
@@ -65,22 +67,20 @@ const TestForm = () => {
     }
 
     const currentQuestion = questions[currentStep]
-    console.log('🚀 ~ TestForm ~ currentStep:', currentStep)
-    console.log('🚀 ~ TestForm ~ questions:', questions)
-    console.log('🚀 ~ TestForm ~ currentQuestion:', currentQuestion)
     const totalSteps = questions.length
 
     return (
         <>
             <Timer
-                duration={200}
+                duration={50}
                 onComplete={() => {
+                    setIsTimerExpired(true)
+                    router.push('/complete')
                     resetStep()
                     clearSessionStorage()
-                    router.push('/complete')
                 }}
             />
-            {currentQuestion ? (
+            {!isTimerExpired ? (
                 <Box
                     maxW='600px'
                     mx='auto'
@@ -155,7 +155,11 @@ const TestForm = () => {
                     </form>
                 </Box>
             ) : (
-                <Box>Ожидайте...</Box>
+                <Box>
+                    <Text mt='6' fontSize='lg'>
+                        Ожидайем сеть...
+                    </Text>
+                </Box>
             )}
         </>
     )

@@ -31,8 +31,18 @@ export const useSessionStorage = () => {
         sessionStorage.removeItem('timerStartTime')
     }
 
+    const updateTimerStartTime = (startTime: number) => {
+        sessionStorage.setItem('timerStartTime', startTime.toString())
+    }
+
+    const clearTimerStartTime = () => {
+        sessionStorage.removeItem('timerStartTime')
+    }
+
     return {
         updateSessionStorage,
         clearSessionStorage,
+        updateTimerStartTime,
+        clearTimerStartTime,
     }
 }
