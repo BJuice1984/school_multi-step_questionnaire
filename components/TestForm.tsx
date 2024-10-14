@@ -1,7 +1,7 @@
 'use client'
 
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import {
     Box,
     Button,
@@ -18,7 +18,7 @@ import { fetchMockQuestions } from '@/mock/mockData'
 import { Question, useTestStore } from '@/store/useTestStore'
 import { useSessionStorage } from '@/hooks/useSessionStorage'
 import { useRouter } from 'next/navigation'
-import Timer from './Timer'
+import Timer from '@/components/Timer'
 
 interface FormData {
     answer: string | string[]
@@ -33,10 +33,17 @@ const TestForm = () => {
     } = useForm<FormData>({
         mode: 'onChange',
     })
-    const [isTimerExpired, setIsTimerExpired] = useState(false)
-    const { currentStep, setStep, resetStep, setAnswer, answers, questions, setQuestions } =
-        useTestStore()
-    const { updateSessionStorage, clearSessionStorage } = useSessionStorage()
+    const {
+        currentStep,
+        setStep,
+        setAnswer,
+        answers,
+        questions,
+        setQuestions,
+        isTimerExpired,
+        setTimerExpired,
+    } = useTestStore()
+    const { updateSessionStorage } = useSessionStorage()
     const router = useRouter()
 
     useEffect(() => {
@@ -55,12 +62,19 @@ const TestForm = () => {
         reset()
 
         if (newStep === questions.length) {
-            clearSessionStorage()
-            resetStep()
-            setIsTimerExpired(true)
+            setTimerExpired(true)
             router.push('/complete')
         }
     }
+
+    useEffect(() => {
+        if (isTimerExpired) {
+            const timeoutId = setTimeout(() => {
+                router.push('/complete')
+            }, 2000)
+            return () => clearTimeout(timeoutId)
+        }
+    }, [isTimerExpired, router])
 
     if (!questions.length) {
         return <Box>Загрузка вопросов...</Box>
@@ -71,15 +85,7 @@ const TestForm = () => {
 
     return (
         <>
-            <Timer
-                duration={50}
-                onComplete={() => {
-                    setIsTimerExpired(true)
-                    router.push('/complete')
-                    resetStep()
-                    clearSessionStorage()
-                }}
-            />
+            <Timer duration={50} />
             {!isTimerExpired ? (
                 <Box
                     maxW='600px'

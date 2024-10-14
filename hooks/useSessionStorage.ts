@@ -20,16 +20,16 @@ export const useSessionStorage = () => {
         }
     }, [setStep, setAnswer])
 
-    const updateSessionStorage = (newStep: number, updatedAnswers: Answer) => {
+    const updateSessionStorage = useCallback((newStep: number, updatedAnswers: Answer) => {
         sessionStorage.setItem('currentStep', newStep.toString())
         sessionStorage.setItem('answers', JSON.stringify(updatedAnswers))
-    }
+    }, [])
 
-    const clearSessionStorage = () => {
+    const clearSessionStorage = useCallback(() => {
         sessionStorage.removeItem('currentStep')
         sessionStorage.removeItem('answers')
         sessionStorage.removeItem('timerStartTime')
-    }
+    }, [])
 
     const updateTimerStartTime = useCallback((startTime: number) => {
         sessionStorage.setItem('timerStartTime', startTime.toString())

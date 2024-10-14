@@ -5,16 +5,25 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import useNickname from '@/hooks/useNickname'
 import { useSessionStorage } from '@/hooks/useSessionStorage'
+import { useTestStore } from '@/store/useTestStore'
 
 export default function HomeClient() {
     const { nickname, setNickname, clearNickname, nicknameInputRef } = useNickname()
     const router = useRouter()
     const { clearSessionStorage } = useSessionStorage()
+    const { resetStep, setTimerExpired } = useTestStore()
 
     const {
         handleSubmit,
         formState: { isSubmitting },
     } = useForm()
+
+    const onStart = () => {
+        clearSessionStorage()
+        resetStep()
+        setTimerExpired(false)
+        router.push('/test')
+    }
 
     const onSubmit = () => {
         const newNickname = nicknameInputRef.current?.value || ''
@@ -74,7 +83,7 @@ export default function HomeClient() {
             <Stack direction='row' spacing={4}>
                 <Button
                     colorScheme='teal'
-                    onClick={() => router.push('/test')}
+                    onClick={onStart}
                     mb={4}
                     isDisabled={!nickname || nickname.trim() === ''}
                 >
@@ -83,9 +92,7 @@ export default function HomeClient() {
 
                 <Button
                     colorScheme='teal'
-                    onClick={() => {
-                        onExit()
-                    }}
+                    onClick={onExit}
                     mb={4}
                     isDisabled={!nickname || nickname.trim() === ''}
                 >

@@ -3,16 +3,17 @@
 import { useEffect, useState } from 'react'
 import { Box, Button, HStack, Text } from '@chakra-ui/react'
 import { useSessionStorage } from '@/hooks/useSessionStorage'
+import { useTestStore } from '@/store/useTestStore'
 
 interface TimerProps {
     duration: number
-    onComplete: () => void
 }
 
-const Timer = ({ duration, onComplete }: TimerProps) => {
+const Timer = ({ duration }: TimerProps) => {
     const [timeLeft, setTimeLeft] = useState(duration)
     const [speedMultiplier, setSpeedMultiplier] = useState(1)
     const { updateTimerStartTime, clearTimerStartTime } = useSessionStorage()
+    const { setTimerExpired } = useTestStore()
 
     const formatTime = (totalSeconds: number) => {
         const hours = Math.floor(totalSeconds / 3600)
@@ -41,10 +42,10 @@ const Timer = ({ duration, onComplete }: TimerProps) => {
 
     useEffect(() => {
         if (timeLeft <= 0) {
-            onComplete()
+            setTimerExpired(true)
             clearTimerStartTime()
         }
-    }, [timeLeft, onComplete, clearTimerStartTime])
+    }, [timeLeft, clearTimerStartTime, setTimerExpired])
 
     useEffect(() => {
         const interval = setInterval(() => {
