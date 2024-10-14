@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Answer, useTestStore } from '@/store/useTestStore'
 
 export const useSessionStorage = () => {
@@ -31,13 +31,13 @@ export const useSessionStorage = () => {
         sessionStorage.removeItem('timerStartTime')
     }
 
-    const updateTimerStartTime = (startTime: number) => {
+    const updateTimerStartTime = useCallback((startTime: number) => {
         sessionStorage.setItem('timerStartTime', startTime.toString())
-    }
+    }, [])
 
-    const clearTimerStartTime = () => {
+    const clearTimerStartTime = useCallback(() => {
         sessionStorage.removeItem('timerStartTime')
-    }
+    }, [])
 
     return {
         updateSessionStorage,

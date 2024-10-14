@@ -37,14 +37,14 @@ const Timer = ({ duration, onComplete }: TimerProps) => {
         } else {
             updateTimerStartTime(now)
         }
-    }, [duration])
+    }, [duration, updateTimerStartTime])
 
     useEffect(() => {
         if (timeLeft <= 0) {
             onComplete()
             clearTimerStartTime()
         }
-    }, [timeLeft])
+    }, [timeLeft, onComplete, clearTimerStartTime])
 
     useEffect(() => {
         const interval = setInterval(() => {

@@ -41,7 +41,7 @@ const TestForm = () => {
 
     useEffect(() => {
         fetchMockQuestions().then((data: Question[]) => setQuestions(data))
-    }, [])
+    }, [setQuestions])
 
     const onNextStep: SubmitHandler<FormData> = data => {
         const answer = Array.isArray(data.answer) ? data.answer : [data.answer]
@@ -157,7 +157,7 @@ const TestForm = () => {
             ) : (
                 <Box>
                     <Text mt='6' fontSize='lg'>
-                        Ожидайем сеть...
+                        Ожидаем сеть...
                     </Text>
                 </Box>
             )}
